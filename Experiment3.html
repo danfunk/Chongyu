@@ -42,8 +42,8 @@
     // DEFAULT SETTINGS
     var total_scenarios = 15;  // How many scenarios should be randomly selected out of the full set?
     var condition = "FIFTY_FIFTY_BLOCKED"; // Can be POSITIVE, POSITIVE_NEGATION, FIFTY_FIFTY_RANDOM, FIFTY_FIFTY_BLOCKED, NEUTRAL
-    var block_size = 5;
-    
+    var block_size = 5; // Number of items in block, if condiftion if fifty_fifty_blocked.
+    var second_word_set = true; // uses the second wordset if set to true.
 
     function parseData(url, callBack) {
         Papa.parse(url, {
@@ -213,9 +213,12 @@
 
             if(positive) {
                 phrase = scenarios[k].PositiveS;
+                if(second_word_set) phrase = scenarios[k].PositiveS2;
+                else phrase = scenarios[k].PositiveS;
                 correctChoice = scenarios[k].PositiveQ;
             } else {
-                phrase = scenarios[k].NegativeS;
+                if(second_word_set) phrase = scenarios[k].NegativeS2;
+                else phrase = scenarios[k].NegativeS;
                 correctChoice = scenarios[k].NegativeQ;
             }
 
