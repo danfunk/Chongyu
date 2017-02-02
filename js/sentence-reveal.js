@@ -52,14 +52,7 @@ jsPsych.plugins["sentence-reveal"] = (function () {
             correct: true
         };
 
-        // Shows the continue button, but only after a pause based of 10ms for each word
-        // in the currently displayed sentence.
-        function show_continue_button() {
-            var timing_fixation = sentences[sentence_index].split(' ').length * 100;
-            setTimeout(function() {
-                $('#jspsych-sentence-reveal-btngroup').show();
-            }, timing_fixation);
-        }
+
 
         // reveals the next sentence
         function reveal_sentence() {
@@ -94,6 +87,15 @@ jsPsych.plugins["sentence-reveal"] = (function () {
             } else {
                 show_continue_button();
             }
+        }
+
+        // Shows the continue button, but only after a pause based of 10ms for each word
+        // in the currently displayed sentence.
+        function show_continue_button() {
+            var timing_fixation = sentences[sentence_index].split(' ').length * 100;
+            setTimeout(function() {
+                $('#jspsych-sentence-reveal-btngroup').show();
+            }, timing_fixation);
         }
 
         // function to end trial when it is time
