@@ -44,6 +44,7 @@
     var condition = "FIFTY_FIFTY_BLOCKED"; // Can be POSITIVE, POSITIVE_NEGATION, FIFTY_FIFTY_RANDOM, FIFTY_FIFTY_BLOCKED, NEUTRAL
     var block_size = 5; // Number of items in block, if condiftion if fifty_fifty_blocked.
     var second_word_set = true; // uses the second wordset if set to true.
+    var question = "mc1";  // Can be yes_no, mc1, or mc2.
 
     function parseData(url, callBack) {
         Papa.parse(url, {
@@ -190,7 +191,9 @@
             console.debug(scenarios[k]);
             var paragraph;
             var phrase;
-            var correctChoice;
+            var yes_no_correct;
+            var mc1_correct;
+            var mc2_correct;
             switch (condition) {
                 case "POSITIVE_NEGATION":
                     positive = true;
@@ -215,11 +218,15 @@
                 phrase = scenarios[k].PositiveS;
                 if(second_word_set) phrase = scenarios[k].PositiveS2;
                 else phrase = scenarios[k].PositiveS;
-                correctChoice = scenarios[k].PositiveQ;
+                yes_no_correct = scenarios[k].PositiveQ;
+                mc1_correct = scenarios[k].mc1pos;
+                mc2_correct = scenarios[k].mc2pos;
             } else {
                 if(second_word_set) phrase = scenarios[k].NegativeS2;
                 else phrase = scenarios[k].NegativeS;
-                correctChoice = scenarios[k].NegativeQ;
+                yes_no_correct = scenarios[k].PostiveQ == "Yes" ? "No" : "Yes";
+                mc1_correct = scenarios[k].mc1pos == "a" ? "b" : "a";
+                mc2_correct = scenarios[k].mc2pos == "a" ? "b" : "a";
             }
 
             console.log("k = " + k + "::" + scenarios[k].Scenario);
@@ -236,18 +243,46 @@
                     updateScore();
                 }
             };
-            var question = {
+
+            var yes_no = {
                 type: 'button-response-correct',
                 is_html: true,
                 stimulus: scenarios[k].Questions,
                 choices: ["Yes", "No"],
-                correct_choice: correctChoice,
-                on_finish: function (trial_data, k) {
+                correct_choice: yes_no_correct,
+                on_finish: function (trial_data) {
                     if(trial_data.correct) score_questions++;
                     updateScore();
                     updateProgress();
                 }
             };
+
+            var mc1 = {
+                type: 'button-response-correct',
+                is_html: true,
+                stimulus: scenarios[k].MultipleChoice1,
+                choices: [scenarios[k].mc1a, scenarios[k].mc1b],
+                correct_choice: mc1_correct == "a" ? scenarios[k].mc1a : scenarios[k].mc1b,
+                on_finish: function (trial_data) {
+                    if(trial_data.correct) score_questions++;
+                   updateScore();
+                    updateProgress();
+                }
+            };
+
+            var mc2 = {
+                type: 'button-response-correct',
+                is_html: true,
+                stimulus: scenarios[k].MultipleChoice2,
+                choices: [scenarios[k].mc2a, scenarios[k].mc2b],
+                correct_choice: mc2_correct == "a" ? scenarios[k].mc2a : scenarios[k].mc2b,
+                on_finish: function (trial_data) {
+                    if(trial_data.correct) score_questions++;
+                    updateScore();
+                    updateProgress();
+                }
+            };
+
 
             console.log(jsPsych.data);
 
@@ -261,7 +296,11 @@
             }
             timeline.push(paragraph);
             timeline.push(scenario);
-            timeline.push(question);
+            switch(question) {
+                case ("yes_no"): timeline.push(yes_no); break;
+                case ("mc1"): timeline.push(mc1); break;
+                case ("mc2"): timeline.push(mc2); break;
+            }
         }
 
         timeline.push(vividness_final);

@@ -61,7 +61,7 @@ input[type="text"] {
 .jspsych-btn {
     display: inline-block;
     padding: 6px 12px;
-    margin: 0px 8px;
+    margin: 10px 8px;
     font-size: 14px;
     font-weight: 400;
     font-family: 'Open Sans', 'Arial', sans-serif;
@@ -340,7 +340,7 @@ label.jspsych-survey-multi-choice-text input[type="radio"] {
 
     .jspsych-btn {
         width: 90%;
-        margin: 10px 0px;
+        white-space: normal;
     }
 
     .piIntro img {
